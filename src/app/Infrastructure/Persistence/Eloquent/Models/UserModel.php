@@ -2,15 +2,16 @@
 
 namespace App\Infrastructure\Persistence\Eloquent\Models;
 
-// Cambiamos el 'use' para que extienda la clase de usuario autenticable de Laravel
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens; // <-- ESTA ES LA LÍNEA QUE FALTABA
 
 class UserModel extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    // Ahora PHP sabe de dónde viene HasApiTokens
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The table associated with the model.
@@ -28,7 +29,7 @@ class UserModel extends Authenticatable
         'name',
         'email',
         'password',
-        'company_id', // Asegúrate de que este campo esté aquí
+        'company_id',
     ];
 
     /**

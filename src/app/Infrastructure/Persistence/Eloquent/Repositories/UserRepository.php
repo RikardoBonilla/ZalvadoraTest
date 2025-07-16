@@ -38,4 +38,8 @@ class UserRepository implements UserRepositoryInterface
     {
         return UserModel::where('company_id', $companyId)->count();
     }
+    public function delete(int $id): bool
+    {
+        return \App\Infrastructure\Persistence\Eloquent\Models\UserModel::destroy($id) > 0;
+    }
 }
