@@ -60,25 +60,7 @@ Copia el archivo de entorno de ejemplo.
 cp src/.env.example src/.env
 ```
 
-**3. Levantar los Contenedores.**
-
-Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL.
-```bash
-docker-compose up -d --build
-```
-**4. Instalar Dependencias de PHP.**
-
-Este es un paso crucial. Instala todas las librerías necesarias del proyecto dentro del contenedor.
-```bash
-docker-compose exec app composer install
-```
-**5. Generar la Clave de la Aplicación.**
-
-```bash
-docker-compose exec app php artisan key:generate
-```
-
-**6. Ajusta la conexion a la base de datos.**
+**4. Ajusta la conexion a la base de datos.**
 
 ```bash
 DB_CONNECTION=mysql
@@ -89,7 +71,25 @@ DB_USERNAME=root
 DB_PASSWORD=root
 ```
 
-**7. Preparar la Base de Datos.**
+**5. Levantar los Contenedores.**
+
+Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL.
+```bash
+docker-compose up -d --build
+```
+**6. Instalar Dependencias de PHP.**
+
+Este es un paso crucial. Instala todas las librerías necesarias del proyecto dentro del contenedor.
+```bash
+docker-compose exec app composer install
+```
+**7. Generar la Clave de la Aplicación.**
+
+```bash
+docker-compose exec app php artisan key:generate
+```
+
+**8. Preparar la Base de Datos.**
 
 Este comando ejecutará todas las migraciones para crear la estructura de la base de datos y luego la poblará con datos de ejemplo (planes, una empresa y un usuario) a través de los seeders.
 
