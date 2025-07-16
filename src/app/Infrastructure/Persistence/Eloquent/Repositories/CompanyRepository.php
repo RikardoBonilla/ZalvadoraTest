@@ -86,4 +86,15 @@ class CompanyRepository implements CompanyRepositoryInterface
             $subscriptionModel->end_date
         );
     }
+
+    public function findAll(): array
+    {
+        return CompanyModel::all()->map(function ($companyModel) {
+            return new Company(
+                $companyModel->id,
+                $companyModel->name,
+                $companyModel->email
+            );
+        })->all();
+    }
 }

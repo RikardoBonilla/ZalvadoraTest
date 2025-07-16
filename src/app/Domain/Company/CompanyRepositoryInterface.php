@@ -8,4 +8,5 @@ interface CompanyRepositoryInterface
     public function save(Company $company): Company;
     public function addSubscription(Subscription $subscription): Subscription;
     public function findActiveSubscriptionFor(int $companyId): ?Subscription;
+    public function findAll(): array;   
 }
