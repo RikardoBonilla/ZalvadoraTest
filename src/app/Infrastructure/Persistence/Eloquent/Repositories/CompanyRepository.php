@@ -36,4 +36,17 @@ class CompanyRepository implements CompanyRepositoryInterface
         $company->id = $companyModel->id;
         return $company;
     }
+
+    public function addSubscription(\App\Domain\Company\Subscription $subscription): \App\Domain\Company\Subscription
+    {
+        $subscriptionModel = \App\Infrastructure\Persistence\Eloquent\Models\SubscriptionModel::create([
+            'company_id' => $subscription->companyId,
+            'plan_id' => $subscription->planId,
+            'start_date' => $subscription->startDate,
+            'end_date' => $subscription->endDate,
+        ]);
+
+        $subscription->id = $subscriptionModel->id;
+        return $subscription;
+    }
 }
