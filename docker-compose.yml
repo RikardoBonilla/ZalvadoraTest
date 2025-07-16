@@ -1,0 +1,51 @@
+services:
+  # Servicio 1: Nuestra aplicación Laravel (con PHP)
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    container_name: zalvadora_app
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - zalvadora_network
+
+  # Servicio 2: El servidor web
+  nginx:
+    image: nginx:alpine
+    container_name: zalvadora_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx:/etc/nginx/conf.d 
+    depends_on:
+      - app
+    networks:
+      - zalvadora_network
+
+  # Servicio 3: La base de datos
+  db:
+    image: mysql:8.0
+    platform: linux/amd64  # <-- AÑADIDO: Solución para Mac M1/M2/M3
+    container_name: zalvadora_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: zalvadora_db
+      MYSQL_ROOT_PASSWORD: root
+      # MYSQL_USER: root
+      # MYSQL_PASSWORD: Control123
+    volumes:
+      - zalvadora_db_data:/var/lib/mysql
+    networks:
+      - zalvadora_network
+
+networks:
+  zalvadora_network:
+    driver: bridge
+
+volumes:
+  zalvadora_db_data:
+    driver: local
