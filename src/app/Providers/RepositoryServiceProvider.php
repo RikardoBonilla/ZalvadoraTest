@@ -14,6 +14,10 @@ class RepositoryServiceProvider extends ServiceProvider
             PlanRepositoryInterface::class, // <- Revisa esta línea
             PlanRepository::class            // <- Revisa esta línea
         );
+        $this->app->bind(
+            \App\Domain\Company\CompanyRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\CompanyRepository::class
+        );
     }
 
     public function boot(): void
