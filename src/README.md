@@ -1,61 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+======================================================================
+  Prueba Técnica: ZalvadoraTest - API de Suscripciones
+======================================================================
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este repositorio contiene la solución a la prueba técnica para Senior Backend Developer. El objetivo ha sido desarrollar una API RESTful para un sistema de gestión de suscripciones, aplicando principios de Arquitectura Limpia y Diseño Guiado por el Dominio (DDD).
 
-## About Laravel
+---
+1. TECNOLOGÍAS Y VERSIONES
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+El proyecto está construido sobre un stack moderno y completamente dockerizado para garantizar la consistencia y facilidad de despliegue.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Framework: Laravel 12
+- Lenguaje: PHP 8.4
+- Base de Datos: MySQL 8.0
+- Entorno: Docker & Docker Compose
+- Documentación API: Swagger (OpenAPI)
+- Autenticación: Laravel Sanctum
+- Testing: PHPUnit
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
+2. FILOSOFÍA DE ARQUITECTURA
+---
 
-## Learning Laravel
+La decisión arquitectónica principal fue implementar una Arquitectura Limpia por Capas, separando las responsabilidades del sistema para lograr un código desacoplado, mantenible y altamente testeable.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+La estructura se divide en tres capas fundamentales dentro de `src/app/`:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+  2.1. Capa de Dominio (`Domain`)
+  El núcleo absoluto. Aquí viven las reglas de negocio puras, sin ninguna dependencia de frameworks o detalles de infraestructura.
+  - Entidades: Clases PHP puras que representan los conceptos de negocio (ej. Plan, Company, User).
+  - Interfaces de Repositorio: Contratos que definen las operaciones de persistencia (ej. PlanRepositoryInterface), pero no su implementación.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+  2.2. Capa de Aplicación (`Application`)
+  El cerebro orquestador. Esta capa no contiene lógica de negocio, sino que coordina el flujo de datos para ejecutar acciones específicas.
+  - Casos de Uso (Use Cases): Clases que representan cada acción que el sistema puede realizar (ej. RegisterCompanyUseCase).
+  - DTOs (Data Transfer Objects): Objetos inmutables que transportan datos de manera estructurada entre las capas.
 
-## Laravel Sponsors
+  2.3. Capa de Infraestructura (`Infrastructure`)
+  Los detalles técnicos y las implementaciones concretas. Es la capa más externa y depende de las demás.
+  - Persistencia: Implementaciones de los repositorios del dominio utilizando Eloquent ORM.
+  - Framework: Contiene los elementos específicos de Laravel como Controladores, Form Requests, API Resources, etc.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Este diseño garantiza que el núcleo del negocio sea independiente de la tecnología, facilitando su evolución y prueba.
 
-### Premium Partners
+---
+3. INSTALACIÓN Y PUESTA EN MARCHA
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+El proyecto está completamente dockerizado. Solo necesitas tener Git y Docker Desktop instalados.
 
-## Contributing
+  1. Clonar el Repositorio
+     git clone <URL_DEL_REPOSITORIO>
+     cd ZalvadoraTest
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  2. Configurar el Entorno
+     Copia el archivo de entorno de ejemplo.
+     cp src/.env.example src/.env
 
-## Code of Conduct
+  3. Levantar los Contenedores
+     Este comando construirá las imágenes y levantará los servicios.
+     docker-compose up -d --build
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+  4. Generar la Clave de la Aplicación
+     docker-compose exec app php artisan key:generate
 
-## Security Vulnerabilities
+  5. Preparar la Base de Datos
+     Este comando ejecutará las migraciones y poblará la base de datos con datos de ejemplo.
+     docker-compose exec app php artisan migrate:fresh --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+¡Listo! La aplicación ya está corriendo.
 
-## License
+---
+4. USO DE LA API
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+  4.1. Documentación Interactiva
+  La documentación completa de la API, generada con Swagger, está disponible en la siguiente URL:
+  URL: http://localhost:8080/api/documentation
+
+  4.2. Autenticación
+  Los endpoints de gestión de usuarios están protegidos. Para obtener un token de acceso, realiza una petición POST al endpoint de login:
+
+  - Endpoint: POST /api/v1/login
+  - Credenciales de prueba (creadas por el seeder):
+    - email: admin@prueba.com
+    - password: password
+
+  La respuesta te proporcionará un token. Para acceder a las rutas protegidas, debes incluir este token en la cabecera de tus peticiones:
+  Authorization: Bearer <TU_TOKEN>
+
+---
+5. EJECUCIÓN DE PRUEBAS
+---
+
+El proyecto incluye una suite de pruebas inicial. Para ejecutar todas las pruebas, utiliza el siguiente comando:
+
+  docker-compose exec app php artisan test
+
+---
+
+¡Gracias por la oportunidad de realizar esta prueba!
