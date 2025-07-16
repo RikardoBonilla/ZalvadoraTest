@@ -36,7 +36,7 @@ class RegisterCompanyUseCase
             startDate: new DateTime(),
             endDate: null // Activa
         );
-
+        // 4. Guardar la suscripción
         $this->companyRepository->saveSubscription($subscription);
 
 

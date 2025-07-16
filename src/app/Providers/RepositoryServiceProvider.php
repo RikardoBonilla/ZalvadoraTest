@@ -18,6 +18,10 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Domain\Company\CompanyRepositoryInterface::class,
             \App\Infrastructure\Persistence\Eloquent\Repositories\CompanyRepository::class
         );
+        $this->app->bind(
+            \App\Domain\User\UserRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\Repositories\UserRepository::class
+        );
     }
 
     public function boot(): void
