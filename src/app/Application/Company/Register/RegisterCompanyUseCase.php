@@ -36,7 +36,9 @@ class RegisterCompanyUseCase
             startDate: new DateTime(),
             endDate: null // Activa
         );
-        $this->companyRepository->addSubscription($subscription);
+
+        $this->companyRepository->saveSubscription($subscription);
+
 
         return $savedCompany;
     }

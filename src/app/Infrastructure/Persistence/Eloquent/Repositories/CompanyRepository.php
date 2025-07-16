@@ -6,6 +6,8 @@ use App\Domain\Company\Company;
 use App\Domain\Company\CompanyRepositoryInterface;
 use App\Infrastructure\Persistence\Eloquent\Models\CompanyModel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Domain\Company\Subscription;
+use App\Infrastructure\Persistence\Eloquent\Models\SubscriptionModel;
 
 class CompanyRepository implements CompanyRepositoryInterface
 {
@@ -48,5 +50,40 @@ class CompanyRepository implements CompanyRepositoryInterface
 
         $subscription->id = $subscriptionModel->id;
         return $subscription;
+    }
+
+    public function saveSubscription(Subscription $subscription): Subscription
+    {
+        $subscriptionModel = SubscriptionModel::updateOrCreate(
+            ['id' => $subscription->id],
+            [
+                'company_id' => $subscription->companyId,
+                'plan_id' => $subscription->planId,
+                'start_date' => $subscription->startDate,
+                'end_date' => $subscription->endDate,
+            ]
+        );
+
+        $subscription->id = $subscriptionModel->id;
+        return $subscription;
+    }
+
+    public function findActiveSubscriptionFor(int $companyId): ?Subscription
+    {
+        $subscriptionModel = SubscriptionModel::where('company_id', $companyId)
+                                              ->whereNull('end_date')
+                                              ->first();
+
+        if (!$subscriptionModel) {
+            return null;
+        }
+
+        return new Subscription(
+            $subscriptionModel->id,
+            $subscriptionModel->company_id,
+            $subscriptionModel->plan_id,
+            $subscriptionModel->start_date,
+            $subscriptionModel->end_date
+        );
     }
 }
