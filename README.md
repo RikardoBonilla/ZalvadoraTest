@@ -77,7 +77,19 @@ docker-compose exec app composer install
 ```bash
 docker-compose exec app php artisan key:generate
 ```
-**6. Preparar la Base de Datos.**
+
+**6. Ajusta la conexion a la base de datos.**
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=zalvadora_db
+DB_USERNAME=root
+DB_PASSWORD=root
+```
+
+**7. Preparar la Base de Datos.**
 
 Este comando ejecutará todas las migraciones para crear la estructura de la base de datos y luego la poblará con datos de ejemplo (planes, una empresa y un usuario) a través de los seeders.
 
