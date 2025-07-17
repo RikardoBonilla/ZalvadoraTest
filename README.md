@@ -59,7 +59,6 @@ Copia el archivo de entorno de ejemplo.
 ```bash
 cp src/.env.example src/.env
 ```
-<<<<<<< HEAD
 
 **3. Levantar los Contenedores.**
 
@@ -79,15 +78,10 @@ docker-compose exec app composer install
 docker-compose exec app php artisan key:generate
 ```
 
-**6. Ajusta la conexion a la base de datos.**
-
-```bash
-=======
 **3. Ajustar la Conexión a la Base de Datos**
 Este es un paso **crítico**. Abre el archivo `src/.env` que acabas de crear en un editor de texto y **reemplaza** las siguientes variables de `DB_` para que apunten a nuestro contenedor de Docker:
 
-```env
-
+```bash
 DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
@@ -96,11 +90,10 @@ DB_USERNAME=root
 DB_PASSWORD=root
 ```
 
-**7. Preparar la Base de Datos.**
-=======
 **4. Levantar los Contenedores.**
 
 Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL (este proceso puede tardar dependiendo de su velocidad de internet y dispositivo).
+
 ```bash
 docker-compose up -d --build
 ```
@@ -112,9 +105,11 @@ docker-compose exec app composer install
 ```
 
 **6. Corregir Permisos**
+
 Para evitar errores de escritura de logs y caché, asigna los permisos correctos a las carpetas de Laravel.
+
 ```bash
-docker-compose exec app chown -R www-data:www-data storage bootstrap/cache
+docker-compose exec app chown -R www-data:wgit ww-data storage bootstrap/cache
 docker-compose exec app chmod -R 775 storage bootstrap/cache
 ```
 
@@ -167,8 +162,4 @@ El proyecto incluye una suite de pruebas inicial para demostrar la metodología.
 docker-compose exec app php artisan test
 ```
 
-<<<<<<< HEAD
 ¡Gracias por la oportunidad de realizar esta prueba!
-=======
-¡Gracias por la oportunidad de realizar esta prueba!
->>>>>>> edb7adc33e032520310e92399e6c00ed917a409d
