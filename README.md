@@ -109,7 +109,7 @@ docker-compose exec app composer install
 Para evitar errores de escritura de logs y caché, asigna los permisos correctos a las carpetas de Laravel.
 
 ```bash
-docker-compose exec app chown -R www-data:wgit ww-data storage bootstrap/cache
+docker-compose exec app chown -R www-data:www-data storage bootstrap/cache
 docker-compose exec app chmod -R 775 storage bootstrap/cache
 ```
 
