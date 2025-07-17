@@ -6,8 +6,6 @@ Este repositorio contiene la solución a la prueba técnica para Senior Backend 
 
 ## 1. Tecnologías y Versiones
 
-El proyecto está construido sobre un stack moderno y completamente dockerizado para garantizar la consistencia y facilidad de despliegue.
-
 * **Framework:** Laravel 12
 * **Lenguaje:** PHP 8.4
 * **Base de Datos:** MySQL 8.0
@@ -20,49 +18,34 @@ El proyecto está construido sobre un stack moderno y completamente dockerizado 
 
 ## 2. Filosofía de Arquitectura
 
-La decisión arquitectónica principal fue implementar una **Arquitectura Limpia por Capas**, separando las responsabilidades del sistema para lograr un código desacoplado, mantenible y altamente testeable.
+La aplicación sigue una Arquitectura Limpia por Capas para garantizar que el código sea desacoplado, mantenible y altamente testeable.
 
-La estructura se divide en tres capas fundamentales dentro de `src/app/`:
-
-### 2.1. Capa de Dominio (`Domain`)
-El corazón de la aplicación. Contiene la lógica de negocio pura, sin ninguna dependencia de frameworks o detalles de infraestructura.
-* **Entidades:** Clases PHP puras que representan los conceptos de negocio (ej. `Plan`, `Company`, `User`).
-* **Interfaces de Repositorio:** Contratos que definen las operaciones de persistencia (ej. `PlanRepositoryInterface`), pero no su implementación.
-
-### 2.2. Capa de Aplicación (`Application`)
-El cerebro orquestador. Esta capa no contiene lógica de negocio, sino que coordina el flujo de datos para ejecutar acciones específicas.
-* **Casos de Uso (Use Cases):** Clases que representan cada acción que el sistema puede realizar (ej. `RegisterCompanyUseCase`, `ChangeCompanyPlanUseCase`).
-* **DTOs (Data Transfer Objects):** Objetos inmutables que transportan datos de manera estructurada entre las capas.
-
-### 2.3. Capa de Infraestructura (`Infrastructure`)
-Los detalles técnicos y las implementaciones concretas. Es la capa más externa y depende de las demás.
-* **Persistencia:** Implementaciones de los repositorios del dominio utilizando **Eloquent ORM**. Los modelos de Eloquent (ej. `PlanModel`) residen aquí, actuando como un detalle de implementación.
-* **Framework:** Contiene los elementos específicos de Laravel como Controladores, `Form Requests`, `API Resources`, Service Providers y Rutas.
-
-Este diseño garantiza que el núcleo del negocio sea independiente de la tecnología, facilitando su evolución y prueba.
+* **Capa de Dominio (`Domain`):** Contiene la lógica de negocio pura (Entidades, Interfaces de Repositorio). Es el núcleo de la aplicación.
+* **Capa de Aplicación (`Application`):** Orquesta los flujos de trabajo a través de Casos de Uso y DTOs, sin contener lógica de negocio.
+* **Capa de Infraestructura (`Infrastructure`):** Contiene los detalles de implementación como los controladores de Laravel, los modelos de Eloquent y las implementaciones concretas de los repositorios.
 
 ---
 
 ## 3. Instalación y Puesta en Marcha
 
-El proyecto está completamente dockerizado. Solo necesitas tener **Git** y **Docker Desktop** instalados.
+El proyecto está completamente dockerizado. Solo necesitas tener **Git** y **Docker Desktop** instalados. Sigue estos pasos en orden exacto.
 
 **1. Clonar el Repositorio**
 ```bash
-git clone https://github.com/RikardoBonilla/ZalvadoraTest.git
+git clone [https://github.com/RikardoBonilla/ZalvadoraTest.git](https://github.com/RikardoBonilla/ZalvadoraTest.git)
 cd ZalvadoraTest
 ```
 
-**2. Configurar el Entorno.**
-
-Copia el archivo de entorno de ejemplo.
+**2. Copiar el Archivo de Entorno**
+Crea tu propio archivo de configuración de entorno a partir del ejemplo.
 ```bash
 cp src/.env.example src/.env
 ```
 
-**4. Ajusta la conexion a la base de datos.**
+**3. Ajustar la Conexión a la Base de Datos**
+Este es un paso **crítico**. Abre el archivo `src/.env` que acabas de crear en un editor de texto y **reemplaza** las siguientes variables de `DB_` para que apunten a nuestro contenedor de Docker:
 
-```bash
+```env
 DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
@@ -71,65 +54,63 @@ DB_USERNAME=root
 DB_PASSWORD=root
 ```
 
-**5. Levantar los Contenedores.**
-
-Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL (este proceso puede tardar dependiendo de su velocidad de internet y dispositivo).
+**4. Levantar los Contenedores de Docker**
+Este comando construirá y levantará los servicios de la aplicación, Nginx y MySQL.
 ```bash
 docker-compose up -d --build
 ```
-**6. Instalar Dependencias de PHP.**
 
-Este es un paso crucial. Instala todas las librerías necesarias del proyecto dentro del contenedor.
+**5. Instalar Dependencias de PHP**
+Instala todas las librerías del proyecto (el contenido de la carpeta `vendor/`) dentro del contenedor.
 ```bash
 docker-compose exec app composer install
 ```
-**7. Generar la Clave de la Aplicación.**
 
+**6. Corregir Permisos**
+Para evitar errores de escritura de logs y caché, asigna los permisos correctos a las carpetas de Laravel.
+```bash
+docker-compose exec app chown -R www-data:www-data storage bootstrap/cache
+docker-compose exec app chmod -R 775 storage bootstrap/cache
+```
+
+**7. Generar la Clave de la Aplicación**
 ```bash
 docker-compose exec app php artisan key:generate
 ```
 
-**8. Preparar la Base de Datos.**
-
-Este comando ejecutará todas las migraciones para crear la estructura de la base de datos y luego la poblará con datos de ejemplo (planes, una empresa y un usuario) a través de los seeders.
-
+**8. Preparar la Base de Datos**
+Este comando borra las tablas, las vuelve a crear según las migraciones y las puebla con datos de ejemplo.
 ```bash
 docker-compose exec app php artisan migrate:fresh --seed
 ```
+
+¡Listo! La aplicación ya está corriendo y configurada correctamente.
+
 ---
 
 ## 4. Uso de la API
+
 ### 4.1. Documentación Interactiva
+La documentación completa de la API, generada con Swagger, está disponible en:
 
-La documentación completa de la API, generada con Swagger, está disponible en la siguiente URL una vez que el entorno está levantado:
-
-```bash
-http://localhost:8080/api/documentation
-```
+**http://localhost:8080/api/documentation**
 
 ### 4.2. Autenticación
+Para probar los endpoints protegidos, primero obtén un token de API:
 
-Los endpoints de gestión de usuarios están protegidos. Para obtener un token de acceso, realiza una petición POST al endpoint de login:
+* **Endpoint:** `POST /api/v1/login`
+* **Credenciales de prueba:**
+    * `email`: `admin@prueba.com`
+    * `password`: `password`
 
+Incluye el token recibido en la cabecera `Authorization` de tus siguientes peticiones: `Authorization: Bearer <TU_TOKEN>`
 
-* **Endpoint:** POST /api/v1/login
-
-* **Credenciales de prueba (creadas por el seeder):** email: admin@prueba.com
-
-* **password:** password
-
-La respuesta te proporcionará un token. 
-
-Para acceder a las rutas protegidas, debes incluir este token en la cabecera de tus peticiones:
-
-* **Authorization:** Bearer <TU_TOKEN>
+---
 
 ## 5. Ejecución de Pruebas
 
-El proyecto incluye una suite de pruebas inicial para demostrar la metodología. Para ejecutar todas las pruebas, utiliza el siguiente comando:
+Para ejecutar la suite de pruebas automatizadas, usa el siguiente comando:
 
 ```bash
 docker-compose exec app php artisan test
 ```
-
-¡Gracias por la oportunidad de realizar esta prueba!
