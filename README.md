@@ -60,24 +60,6 @@ Copia el archivo de entorno de ejemplo.
 cp src/.env.example src/.env
 ```
 
-**3. Levantar los Contenedores.**
-
-Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL.
-```bash
-docker-compose up -d --build
-```
-**4. Instalar Dependencias de PHP.**
-
-Este es un paso crucial. Instala todas las librerías necesarias del proyecto dentro del contenedor.
-```bash
-docker-compose exec app composer install
-```
-**5. Generar la Clave de la Aplicación.**
-
-```bash
-docker-compose exec app php artisan key:generate
-```
-
 **3. Ajustar la Conexión a la Base de Datos**
 Este es un paso **crítico**. Abre el archivo `src/.env` que acabas de crear en un editor de texto y **reemplaza** las siguientes variables de `DB_` para que apunten a nuestro contenedor de Docker:
 
@@ -90,41 +72,39 @@ DB_USERNAME=root
 DB_PASSWORD=root
 ```
 
-**4. Levantar los Contenedores.**
+**. Levantar los Contenedores.**
 
-Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL (este proceso puede tardar dependiendo de su velocidad de internet y dispositivo).
+Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL.
 
 ```bash
 docker-compose up -d --build
 ```
-**5. Instalar Dependencias de PHP.**
+
+**4. Instalar Dependencias de PHP.**
 
 Este es un paso crucial. Instala todas las librerías necesarias del proyecto dentro del contenedor.
+
 ```bash
 docker-compose exec app composer install
 ```
 
-**6. Corregir Permisos**
-
-Para evitar errores de escritura de logs y caché, asigna los permisos correctos a las carpetas de Laravel.
-
+**5. Generar la Migracion de la Aplicación.**
 ```bash
-docker-compose exec app chown -R www-data:www-data storage bootstrap/cache
-docker-compose exec app chmod -R 775 storage bootstrap/cache
+docker-compose exec app php artisan migrate
 ```
 
-**7. Generar la Clave de la Aplicación.**
+**6. Generar la Clave de la Aplicación.**
 
 ```bash
 docker-compose exec app php artisan key:generate
 ```
 
-**8. Preparar la Base de Datos.**
+<!-- **8. Preparar la Base de Datos.**
 
 Este comando ejecutará todas las migraciones para crear la estructura de la base de datos y luego la poblará con datos de ejemplo (planes, una empresa y un usuario) a través de los seeders.
 
 ```bash
-docker-compose exec app php artisan migrate:fresh --seed
+docker-compose exec app php artisan migrate:fresh --seed -->
 ```
 ---
 
