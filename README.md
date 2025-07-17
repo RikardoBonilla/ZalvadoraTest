@@ -99,14 +99,15 @@ docker-compose exec app php artisan migrate
 docker-compose exec app php artisan key:generate
 ```
 
-<!-- **8. Preparar la Base de Datos.**
-
-Este comando ejecutará todas las migraciones para crear la estructura de la base de datos y luego la poblará con datos de ejemplo (planes, una empresa y un usuario) a través de los seeders.
-
+**7. Preparar la Base de Datos.**
 ```bash
-docker-compose exec app php artisan migrate:fresh --seed 
+docker-compose exec app php artisan migrate:fresh --seed
 ```
--->
+
+**7. Ajustando la documentacion de Swagger.**
+```bash
+docker-compose exec app php artisan l5-swagger:generate
+```
 ---
 
 ## 4. Uso de la API
