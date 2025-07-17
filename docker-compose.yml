@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: docker/app/Dockerfile
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
     container_name: zalvadora_app
     volumes:
       - ./src:/var/www/html
