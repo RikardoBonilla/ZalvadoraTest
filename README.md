@@ -73,7 +73,7 @@ DB_PASSWORD=root
 
 **5. Levantar los Contenedores.**
 
-Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL.
+Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL (este proceso puede tardar dependiendo de su velocidad de internet y dispositivo).
 ```bash
 docker-compose up -d --build
 ```
