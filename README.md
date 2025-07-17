@@ -104,8 +104,9 @@ docker-compose exec app php artisan key:generate
 Este comando ejecutará todas las migraciones para crear la estructura de la base de datos y luego la poblará con datos de ejemplo (planes, una empresa y un usuario) a través de los seeders.
 
 ```bash
-docker-compose exec app php artisan migrate:fresh --seed -->
+docker-compose exec app php artisan migrate:fresh --seed 
 ```
+-->
 ---
 
 ## 4. Uso de la API
