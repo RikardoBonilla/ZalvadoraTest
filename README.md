@@ -59,6 +59,7 @@ Copia el archivo de entorno de ejemplo.
 ```bash
 cp src/.env.example src/.env
 ```
+<<<<<<< HEAD
 
 **3. Levantar los Contenedores.**
 
@@ -81,6 +82,12 @@ docker-compose exec app php artisan key:generate
 **6. Ajusta la conexion a la base de datos.**
 
 ```bash
+=======
+**3. Ajustar la Conexión a la Base de Datos**
+Este es un paso **crítico**. Abre el archivo `src/.env` que acabas de crear en un editor de texto y **reemplaza** las siguientes variables de `DB_` para que apunten a nuestro contenedor de Docker:
+
+```env
+>>>>>>> edb7adc33e032520310e92399e6c00ed917a409d
 DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
@@ -89,7 +96,37 @@ DB_USERNAME=root
 DB_PASSWORD=root
 ```
 
+<<<<<<< HEAD
 **7. Preparar la Base de Datos.**
+=======
+**4. Levantar los Contenedores.**
+
+Este comando construirá las imágenes y levantará los servicios de la aplicación, Nginx y MySQL (este proceso puede tardar dependiendo de su velocidad de internet y dispositivo).
+```bash
+docker-compose up -d --build
+```
+**5. Instalar Dependencias de PHP.**
+
+Este es un paso crucial. Instala todas las librerías necesarias del proyecto dentro del contenedor.
+```bash
+docker-compose exec app composer install
+```
+
+**6. Corregir Permisos**
+Para evitar errores de escritura de logs y caché, asigna los permisos correctos a las carpetas de Laravel.
+```bash
+docker-compose exec app chown -R www-data:wgit ww-data storage bootstrap/cache
+docker-compose exec app chmod -R 775 storage bootstrap/cache
+```
+
+**7. Generar la Clave de la Aplicación.**
+
+```bash
+docker-compose exec app php artisan key:generate
+```
+
+**8. Preparar la Base de Datos.**
+>>>>>>> edb7adc33e032520310e92399e6c00ed917a409d
 
 Este comando ejecutará todas las migraciones para crear la estructura de la base de datos y luego la poblará con datos de ejemplo (planes, una empresa y un usuario) a través de los seeders.
 
@@ -132,4 +169,8 @@ El proyecto incluye una suite de pruebas inicial para demostrar la metodología.
 docker-compose exec app php artisan test
 ```
 
+<<<<<<< HEAD
 ¡Gracias por la oportunidad de realizar esta prueba!
+=======
+¡Gracias por la oportunidad de realizar esta prueba!
+>>>>>>> edb7adc33e032520310e92399e6c00ed917a409d
